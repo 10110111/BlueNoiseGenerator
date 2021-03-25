@@ -7,6 +7,6 @@
 //#define USE_FAST_POW_SSE
 //#define USE_FAST_EXP
 #define USE_FAST_MODULO
-#define USE_FAST_DIV
+//#define USE_FAST_DIV
 
 #endif
