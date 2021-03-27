@@ -7,6 +7,7 @@
 #include <chrono>
 #include <sstream>
 #include <iomanip>
+#include <stdexcept>
 
 BlueNoiseGeneratorParameters params;
 BlueNoiseGenerator generator;
@@ -38,14 +39,41 @@ private:
 	virtual void OnSliceRefined(size_t sliceIndex, size_t totalSliceCount) override;
 };
 
+unsigned getUInt(std::string const s)
+{
+    std::size_t pos;
+    const auto val=std::stoul(std::string(s), &pos);
+    if(pos!=s.size())
+        throw std::invalid_argument("Bad unsigned int: "+std::string(s));
+    if(val>std::numeric_limits<unsigned>::max())
+        throw std::invalid_argument("Too large number: "+std::string(s));
+    return val;
+}
+
 int main(int argc, char** argv)
 {
+    if(argc!=3)
+    {
+        std::cerr << "Usage: " << argv[0] << " width height\n";
+        return 1;
+    }
+    unsigned width, height;
+    try
+    {
+        width  = getUInt(argv[1]);
+        height = getUInt(argv[2]);
+    }
+    catch(std::exception const& ex)
+    {
+        std::cerr << ex.what() << "\n";
+        return 1;
+    }
 
 	// 2D Texture example
 	params.chosenMethod = BlueNoiseGeneratorParameters::Method_SolidAngle;
 	params.N_dimensions = 2u;
-	params.dimensionSize[0] = 128;
-	params.dimensionSize[1] = 128;
+	params.dimensionSize[0] = width;
+	params.dimensionSize[1] = height;
 	params.dimensionSize[2] = 0;
 	params.dimensionSize[3] = 0;
 	params.N_valuesPerItem = 1u;
