@@ -298,7 +298,7 @@ Real BlueNoiseGeneratorImpl::ComputeLocalScoreScalar(const int32_t srcCoord[], u
 		SSERegister score;
 		score.v = _mm_set_ps1(0.f);
 		size_t neighOffsets[4] = { 0 };
-		__declspec(align(16)) float  distWeights[4] = { 0 }; // TODO : portable stuff here for alignment
+		alignas(16) float  distWeights[4] = { 0 }; // TODO : portable stuff here for alignment
 		uint32_t vIndex = 0;
 		bool needWrap = false;
 		int32_t baseOffset = 0;
