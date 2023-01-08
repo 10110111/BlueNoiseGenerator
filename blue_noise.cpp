@@ -4,10 +4,12 @@
 #include "blue_noise_generator.h"
 #include "blue_noise_export_util.h"
 
+#include <cmath>
 #include <chrono>
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
+#include <algorithm>
 
 BlueNoiseGeneratorParameters params;
 BlueNoiseGenerator generator;
@@ -106,9 +108,15 @@ int main(int argc, char** argv)
 		return -1;
 		break;
 	}
+	std::vector<float> blueNoiseTriangleRemapped(blueNoise.size());
+    std::transform(blueNoise.begin(), blueNoise.end(), blueNoiseTriangleRemapped.begin(),
+                   [](const float v){ using std::sqrt;
+                                      return v<=0.5 ? sqrt(2*v)-1
+                                                    : 1-sqrt(2-2*v); });
 	BlueNoiseExportUtil::SaveAsPPM(whiteNoise, "mt_white_noise.ppm", params.dimensionSize, params.N_dimensions, params.N_valuesPerItem);
 	BlueNoiseExportUtil::SaveAsPPM(blueNoise, "mt_blue_noise.ppm", params.dimensionSize, params.N_dimensions, params.N_valuesPerItem);
 	BlueNoiseExportUtil::PrintCodeOutput("noise.txt", blueNoise, "BlueNoise", false, params.dimensionSize, params.N_dimensions, params.N_valuesPerItem);
+	BlueNoiseExportUtil::PrintCodeOutput("noise-triangle-remapped.txt", blueNoiseTriangleRemapped, "BlueNoiseTriangleRemapped", false, params.dimensionSize, params.N_dimensions, params.N_valuesPerItem);
 }
 
 std::vector<float> InvertTex3DXZ(const std::vector<float> &tex, const BlueNoiseGeneratorParameters &params)
