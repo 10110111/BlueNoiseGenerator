@@ -9,6 +9,7 @@
 #include "config.h"
 
 #ifdef USE_SSE
+#include <xmmintrin.h>
 	union SSERegister
 	{
 		__m128 v;

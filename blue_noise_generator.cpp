@@ -890,7 +890,7 @@ void BlueNoiseGeneratorImpl::UnlockIterGuard()
 }
 
 //===========================================================================================================================
-void BlueNoiseGeneratorImpl::NextIter(Real deltaScore, uint32_t swapAttempt)
+void BlueNoiseGeneratorImpl::NextIter(Real deltaScore, size_t swapAttempt)
 {
 	if (_ActuallyUseMultithreading)
 	{
